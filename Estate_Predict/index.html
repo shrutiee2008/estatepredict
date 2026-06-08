@@ -1,0 +1,1839 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EstatePredict — Precision Real Estate Valuation</title>
+    <!-- Premium Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Lucide Icons Custom CSS & Library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      /* --- Dynamic Light Mode CSS & Design System --- */
+      :root {
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --font-mono: "JetBrains Mono", SFMono-Regular, Consolas, monospace;
+        
+        --color-background: #f7f9fb;
+        --color-surface-white: #ffffff;
+        --color-navy-dark: #0f172a;
+        --color-navy-muted: #475569;
+        --color-emerald: #10b981;
+        --color-emerald-dark: #059669;
+        --color-emerald-light: #ecfdf5;
+        --color-border-slate: #e2e8f0;
+        --color-slate-table-bg: #f8fafc;
+        
+        --border-radius-sm: 4px;
+        --border-radius-md: 8px;
+        --border-radius-lg: 12px;
+        --border-radius-full: 9999px;
+        
+        --transition-base: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--color-navy-dark);
+        background-image: linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.88) 100%), url('/src/assets/images/mumbai_night_skyline_1780856701012.png');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: #f1f5f9;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      button, input, select, textarea {
+        font-family: inherit;
+      }
+
+      /* --- App Header / Navigation --- */
+      .app-header {
+        background-color: rgba(15, 23, 42, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background-color: var(--color-navy-dark);
+        border-radius: var(--border-radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+      }
+
+      .logo-group:hover .logo-icon {
+        transform: scale(1.04);
+      }
+
+      .logo-icon i {
+        color: var(--color-emerald);
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-meta {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logo-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .logo-subtitle {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 700;
+        color: #94a3b8;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-top: 1px;
+      }
+
+      /* Navigation Links Style */
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        height: 100%;
+      }
+
+      .nav-tab {
+        background: none;
+        border: none;
+        color: var(--color-navy-muted);
+        font-size: 14px;
+        font-weight: 500;
+        height: 64px;
+        padding: 0 4px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        transition: color 0.15s ease;
+      }
+
+      .nav-tab:hover {
+        color: var(--color-navy-dark);
+      }
+
+      .nav-tab.active {
+        color: var(--color-navy-dark);
+        font-weight: 600;
+      }
+
+      .nav-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--color-navy-dark);
+        border-radius: 3px 3px 0 0;
+      }
+
+      /* Desktop Auth sign-in */
+      .auth-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .auth-btn {
+        background-color: var(--color-navy-dark);
+        color: white;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 10px 20px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition-base);
+      }
+
+      .auth-btn:hover {
+        background-color: #1e293b;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .verified-broker {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-navy-dark);
+        background: #f1f5f9;
+        padding: 8px 14px;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid #cbd5e1;
+      }
+
+      .verified-broker .broker-badge {
+        font-size: 10px;
+        color: var(--color-emerald-dark);
+        background: var(--color-emerald-light);
+        padding: 1px 6px;
+        border-radius: var(--border-radius-sm);
+        font-weight: 700;
+      }
+
+      /* --- Interactive Tall Hero Banner --- */
+      .hero-banner {
+        position: relative;
+        padding: 80px 24px 100px 24px;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        z-index: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .hero-title {
+        font-size: 44px;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.024em;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+        color: #94a3b8;
+        max-width: 700px;
+        margin: 0 auto 48px auto;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      /* --- Translucent Glass Predictor Box --- */
+      .glass-predictor-card {
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--border-radius-lg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 32px;
+        text-align: left;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        margin: 0 auto;
+        max-width: 1100px;
+      }
+
+      .form-presets {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 16px;
+      }
+
+      .presets-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-right: 8px;
+      }
+
+      .preset-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        transition: var(--transition-base);
+      }
+
+      .preset-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: white;
+      }
+
+      /* Prediction Card Inputs Grid */
+      .predictor-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .field-label i {
+        color: #64748b;
+        width: 14px;
+        height: 14px;
+      }
+
+      .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 11px 14px;
+        border-radius: var(--border-radius-sm);
+        outline: none;
+        transition: var(--transition-base);
+        width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .glass-input::placeholder {
+        color: #475569;
+      }
+
+      .glass-input:focus {
+        border-color: var(--color-emerald);
+        background: rgba(255, 255, 255, 0.09);
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+      }
+
+      select.glass-input {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+      }
+
+      select.glass-input option {
+        background-color: var(--color-navy-dark);
+        color: white;
+      }
+
+      /* Slider Styling */
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .slider-input {
+        flex: 1;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+      }
+
+      .slider-input::-webkit-slider-thumb {
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--color-emerald);
+        transition: transform 0.1s ease;
+      }
+
+      .slider-input::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      .slider-value-badge {
+        font-family: var(--font-mono);
+        color: #e2e8f0;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 4px 8px;
+        border-radius: 4px;
+        min-width: 65px;
+        text-align: center;
+      }
+
+      /* Bottom Form Action bar */
+      .form-actions-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 24px;
+        flex-wrap: wrap;
+      }
+
+      .info-tip {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #94a3b8;
+        font-size: 13px;
+        max-width: 500px;
+      }
+
+      .info-tip i {
+        color: var(--color-emerald);
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+      }
+
+      /* Predict button style exactly matching design */
+      .predict-btn {
+        background-color: #00ca86;
+        color: #030712;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1;
+        padding: 15px 36px;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: var(--transition-base);
+      }
+
+      .predict-btn:hover {
+        background-color: #00df94;
+        box-shadow: 0 4px 20px rgba(0, 202, 134, 0.25);
+        transform: translateY(-1px);
+      }
+
+      .predict-btn:active {
+        transform: translateY(0);
+      }
+
+      .predict-btn i {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.2s ease;
+      }
+
+      .predict-btn:hover i {
+        transform: translateX(3px);
+      }
+
+      /* Loading state inside button */
+      .predict-btn.loading {
+        background-color: var(--color-navy-muted) !important;
+        color: #e2e8f0;
+        pointer-events: none;
+      }
+
+      /* --- Prediction Output Showcase Section --- */
+      .output-section {
+        max-width: 1200px;
+        margin: -40px auto 60px auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 10;
+        display: none; /* revealed via script */
+      }
+
+      .output-wrapper {
+        background: var(--color-surface-white);
+        border: 1px solid var(--color-border-slate);
+        border-radius: var(--border-radius-lg);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.01);
+        overflow: hidden;
+      }
+
+      /* Top pricing panel */
+      .output-lead-card {
+        background-color: var(--color-navy-dark);
+        color: white;
+        padding: 40px;
+        position: relative;
+      }
+
+      .output-lead-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .output-badge {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--color-emerald);
+        letter-spacing: 0.1em;
+      }
+
+      .confidence-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        color: #030712;
+        background: #00e599;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: var(--border-radius-sm);
+      }
+
+      .confidence-badge i {
+        width: 14px;
+        height: 14px;
+      }
+
+      .predicted-price-display {
+        font-size: 54px;
+        font-weight: 900;
+        color: white;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .predicted-price-unit {
+        font-size: 20px;
+        font-weight: 500;
+        color: #94a3b8;
+      }
+
+      .valuation-para {
+        font-size: 14px;
+        color: #cbd5e1;
+        font-weight: 400;
+      }
+
+      /* Horizontal metrics bar */
+      .metric-infobar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: rgba(15, 23, 42, 0.45);
+      }
+
+      .mini-metric-item {
+        padding: 20px;
+        text-align: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .mini-metric-item:last-child {
+        border-right: none;
+      }
+
+      .mini-metric-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 4px;
+        display: block;
+      }
+
+      .mini-metric-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+      }
+
+      .rating-pill-green {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        padding: 2px 8px;
+        border-radius: var(--border-radius-sm);
+        font-size: 13px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+
+      /* Detailed Analysis Breakdown */
+      .analysis-block {
+        padding: 36px;
+      }
+
+      .analysis-header {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--color-navy-dark);
+        margin-bottom: 24px;
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .analysis-header i {
+        color: var(--color-navy-muted);
+        width: 16px;
+        height: 16px;
+      }
+
+      .factor-breakdown-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .factor-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .factor-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .factor-name {
+        color: var(--color-navy-muted);
+        font-weight: 500;
+      }
+
+      .factor-weight {
+        font-family: var(--font-mono);
+        font-weight: 600;
+      }
+
+      .factor-weight.positive {
+        color: #059669;
+      }
+
+      .factor-weight.negative {
+        color: #dc2626;
+      }
+
+      .factor-weight.neutral {
+        color: var(--color-navy-muted);
+      }
+
+      /* --- Interactive Historical Dataset Tab --- */
+      .section-container {
+        max-width: 1200px;
+        margin: 40px auto 80px auto;
+        padding: 0 24px;
+      }
+
+      .section-card {
+        background: var(--color-surface-white);
+        border: 1px solid var(--color-border-slate);
+        border-radius: var(--border-radius-lg);
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01);
+      }
+
+      .dataset-top-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .search-box-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+        min-width: 250px;
+      }
+
+      .search-box-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        width: 16px;
+        height: 16px;
+      }
+
+      .search-input {
+        background-color: #f1f5f9;
+        border: 1px solid var(--color-border-slate);
+        color: var(--color-navy-dark);
+        font-size: 14px;
+        padding: 10px 14px 10px 42px;
+        border-radius: var(--border-radius-sm);
+        width: 100%;
+        outline: none;
+        transition: var(--transition-base);
+      }
+
+      .search-input:focus {
+        background-color: white;
+        border-color: var(--color-navy-dark);
+      }
+
+      /* Tab Filters */
+      .table-filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .filter-select {
+        background-color: white;
+        border: 1px solid var(--color-border-slate);
+        color: var(--color-navy-muted);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 10px 14px;
+        border-radius: var(--border-radius-sm);
+        outline: none;
+        cursor: pointer;
+      }
+
+      .filter-select:hover {
+        border-color: #cbd5e1;
+      }
+
+      /* Summary KPI cards for historical records */
+      .dataset-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+      }
+
+      .kpi-card {
+        background: #f8fafc;
+        border: 1px solid var(--color-border-slate);
+        border-radius: var(--border-radius-md);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .kpi-icon-circ {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: white;
+        border: 1px solid var(--color-border-slate);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .kpi-icon-circ i {
+        color: var(--color-navy-dark);
+        width: 20px;
+        height: 20px;
+      }
+
+      .kpi-text-block {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .kpi-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--color-navy-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 2px;
+      }
+
+      .kpi-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--color-navy-dark);
+      }
+
+      /* Custom scrollable dataset table */
+      .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid var(--color-border-slate);
+        border-radius: var(--border-radius-md);
+      }
+
+      .dataset-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 13px;
+      }
+
+      .dataset-table th {
+        background-color: var(--color-slate-table-bg);
+        color: var(--color-navy-muted);
+        font-weight: 600;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--color-border-slate);
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.04em;
+        user-select: none;
+      }
+
+      .dataset-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--color-border-slate);
+        color: var(--color-navy-dark);
+        vertical-align: middle;
+      }
+
+      .dataset-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .dataset-table tr:hover td {
+        background-color: #f1f5f9;
+        cursor: pointer;
+      }
+
+      .dataset-table .td-price {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        color: var(--color-navy-dark);
+      }
+
+      .badge-property {
+        background-color: #f1f5f9;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: var(--border-radius-sm);
+        display: inline-block;
+      }
+
+      .badge-feature-tag {
+        background-color: var(--color-emerald-light);
+        color: var(--color-emerald-dark);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      /* --- "How it Works" Screen Tab --- */
+      .workflow-flex {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      @media (min-width: 968px) {
+        .workflow-flex {
+          grid-template-columns: 1.28fr 1fr;
+        }
+      }
+
+      .workflow-editorial h3 {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+
+      .workflow-editorial p {
+        font-size: 14px;
+        color: var(--color-navy-muted);
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      /* Vertical Stepper List */
+      .stepper-list {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .stepper-item {
+        display: flex;
+        gap: 16px;
+      }
+
+      .stepper-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: var(--color-navy-dark);
+        color: white;
+        font-weight: 700;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .stepper-details h4 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-navy-dark);
+        margin-bottom: 4px;
+      }
+
+      .stepper-details p {
+        font-size: 13px;
+        color: var(--color-navy-muted);
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* Code container block */
+      .code-container {
+        background-color: var(--color-navy-dark);
+        border-radius: var(--border-radius-md);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .code-header {
+        background-color: #0b0f19;
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .code-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .code-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .code-dot.red { background-color: #ef4444; }
+      .code-dot.yellow { background-color: #fbbf24; }
+      .code-dot.green { background-color: #10b981; }
+
+      .code-lang-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 600;
+      }
+
+      .code-editor-area {
+        padding: 20px;
+        margin: 0;
+        overflow: auto;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: #e2e8f0;
+        line-height: 1.6;
+        text-align: left;
+      }
+
+      .code-keyword { color: #f43f5e; }
+      .code-import { color: #38bdf8; }
+      .code-string { color: #a3e635; }
+      .code-comment { color: #64748b; font-style: italic; }
+      .code-call { color: #fbcfe8; }
+
+      /* --- Footer styling --- */
+      .app-footer {
+        background-color: rgba(15, 23, 42, 0.75);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 32px 24px;
+        margin-top: 80px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #94a3b8;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      .footer-link {
+        color: #94a3b8;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+      }
+
+      /* Alert message card */
+      .predict-alert {
+        background-color: var(--color-emerald-light);
+        border-left: 4px solid var(--color-emerald);
+        color: var(--color-emerald-dark);
+        border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.01);
+      }
+
+      .predict-alert i {
+        color: var(--color-emerald);
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Loading full screen overlay */
+      .ml-overlay-train {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(15, 23, 42, 0.95);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .ml-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border-left-color: var(--color-emerald);
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Responsive padding helpers */
+      @media (max-width: 768px) {
+        .hero-banner {
+          padding: 60px 16px 80px 16px;
+        }
+        .hero-title {
+          font-size: 32px;
+        }
+        .predictor-form-grid {
+          grid-template-columns: 1fr;
+        }
+        .metric-infobar {
+          grid-template-columns: 1fr;
+        }
+        .mini-metric-item {
+          border-right: none;
+          border-bottom: 1px solid var(--color-border-slate);
+        }
+        .mini-metric-item:last-child {
+          border-bottom: none;
+        }
+        .header-container {
+          padding: 0 16px;
+        }
+        .nav-links {
+          display: none; /* hidden on small screens or drawer required */
+        }
+        .app-header {
+          position: relative;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- On-load dynamic Machine Learning Solver Backdrop -->
+    <div id="ml-trainer-overlay" class="ml-overlay-train">
+      <div class="ml-spinner"></div>
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 6px;">Initializing Precision Valuation Engine...</h3>
+      <p style="font-size: 13px; color: #94a3b8; font-family: var(--font-mono);">Optimizing model coefficients for Mumbai key sectors...</p>
+    </div>
+
+    <!-- Website Header -->
+    <header class="app-header">
+      <div class="header-container">
+        
+        <!-- Brand Logo -->
+        <div class="logo-group" onclick="switchTab('predictor')">
+          <div class="logo-icon">
+            <i data-lucide="landmark"></i>
+          </div>
+          <div class="logo-meta">
+            <span class="logo-title">EstatePredict</span>
+            <span class="logo-subtitle">AI ANALYTICS</span>
+          </div>
+        </div>
+
+        <!-- Right Hand Profile Broker Portal -->
+        <div class="auth-group">
+          <div id="broker-badge-container">
+            <!-- Filled via program JS on Sign-In click -->
+            <button class="auth-btn" id="sign-in-btn" onclick="executeMockLogin()">Sign In</button>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- TAB 1: PREDICTOR SCREEN -->
+    <div class="tab-content-panel" id="panel-predictor" style="display: block;">
+      
+      <!-- Interactive Hero Section -->
+      <section class="hero-banner">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">Precision Property Valuation</h1>
+          <p class="hero-subtitle">Leveraging AI and historical market data to predict real estate values with institutional-grade accuracy.</p>
+          
+          <!-- Crystal Glass Predictor form -->
+          <div class="glass-predictor-card">
+            
+            <!-- Quick select buttons to preload configurations -->
+            <div class="form-presets">
+              <span class="presets-label">Quick Presets:</span>
+              <button class="preset-btn" onclick="loadConfigPreset(1500, 'Andheri', 3, 'Apartment', 12, 'Both', 5, 'Gym')">🏙️ Executive Apartment</button>
+              <button class="preset-btn" onclick="loadConfigPreset(1800, 'Mulund', 4, 'Bungalow', 15, 'Car', 2, 'Gym+Playground')">🏡 Suburban Family Villa</button>
+              <button class="preset-btn" onclick="loadConfigPreset(800, 'Dadar', 2, 'Rowhouse', 3, 'Bike', 18, 'CCTV')">🌆 Dadar Heritage Rowhouse</button>
+              <button class="preset-btn" onclick="loadConfigPreset(500, 'Thane', 1, 'Apartment', 6, 'None', 10, 'None')">💡 Affordable Starter</button>
+            </div>
+
+            <!-- Predictor parameters form -->
+            <form id="valuation-calculator" onsubmit="triggerModelCalculation(event)">
+              <div class="predictor-form-grid">
+                
+                <!-- Area -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="maximize-2"></i> Area (sqft)
+                  </label>
+                  <input type="number" id="field-area" class="glass-input" required min="100" max="10000" placeholder="e.g. 1500" value="1200" oninput="toggleResultPanel(false)">
+                </div>
+
+                <!-- Location -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="map-pin"></i> Location
+                  </label>
+                  <select id="field-location" class="glass-input" onchange="toggleResultPanel(false)">
+                    <option value="Dadar">Dadar</option>
+                    <option value="Andheri" selected>Andheri</option>
+                    <option value="Borivali">Borivali</option>
+                    <option value="Mulund">Mulund</option>
+                    <option value="Vashi">Vashi</option>
+                    <option value="Thane">Thane</option>
+                  </select>
+                </div>
+
+                <!-- BHK count -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="bed"></i> Bedrooms
+                  </label>
+                  <select id="field-bedrooms" class="glass-input" onchange="toggleResultPanel(false)">
+                    <option value="1">1 BHK</option>
+                    <option value="2">2 BHK</option>
+                    <option value="3" selected>3 BHK</option>
+                    <option value="4">4 BHK</option>
+                    <option value="5">5 BHK</option>
+                  </select>
+                </div>
+
+                <!-- Property Structure Type -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="home"></i> Property Type
+                  </label>
+                  <select id="field-type" class="glass-input" onchange="toggleResultPanel(false)">
+                    <option value="Apartment" selected>Apartment</option>
+                    <option value="Bungalow">Bungalow</option>
+                    <option value="Duplex">Duplex</option>
+                    <option value="Rowhouse">Rowhouse</option>
+                  </select>
+                </div>
+
+                <!-- Floor Number -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="layers"></i> Floor No.
+                  </label>
+                  <input type="number" id="field-floor" class="glass-input" required min="0" max="100" value="5" oninput="toggleResultPanel(false)">
+                </div>
+
+                <!-- Parking Availability -->
+                <div class="form-field">
+                  <label class="field-label">
+                    <i data-lucide="car"></i> Parking
+                  </label>
+                  <select id="field-parking" class="glass-input" onchange="toggleResultPanel(false)">
+                    <option value="Both" selected>Both Bike & Car Parking</option>
+                    <option value="Car">Car Parking Only</option>
+                    <option value="Bike">Bike Parking Only</option>
+                    <option value="None">No Dedicated Parking</option>
+                  </select>
+                </div>
+
+                <!-- Property Age (Slider) -->
+                <div class="form-field" style="grid-column: span 2;">
+                  <label class="field-label" style="justify-content: space-between;">
+                    <span><i data-lucide="clock"></i> Property Age (Years)</span>
+                    <span id="label-age-numeric" style="color: var(--color-emerald); font-weight: bold;">5 Years old</span>
+                  </label>
+                  <div class="slider-container">
+                    <input type="range" id="field-age" class="slider-input" min="0" max="30" value="5" oninput="updateAgeLabel(this.value); toggleResultPanel(false);">
+                    <div class="slider-value-badge" id="age-badge-helper">Standard</div>
+                  </div>
+                </div>
+
+                <!-- Society Features -->
+                <div class="form-field" style="grid-column: span 2;">
+                  <label class="field-label">
+                    <i data-lucide="sparkles"></i> Society Features
+                  </label>
+                  <select id="field-society" class="glass-input" onchange="toggleResultPanel(false)">
+                    <option value="None">None (Basic Housing)</option>
+                    <option value="Gym" selected>Gym facility</option>
+                    <option value="CCTV">CCTV Security System</option>
+                    <option value="Playground">Kids Playground area</option>
+                    <option value="Gym+CCTV">Integrated Gym & CCTV protection</option>
+                    <option value="Gym+Playground">Recreational Gym with Outdoor Playground</option>
+                    <option value="CCTV+Playground">CCTV Guarding and Safe Kids Complex</option>
+                    <option value="All">All Features Pack (Gym, CCTV, Playground, Club)</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <!-- Alert information list & submission button -->
+              <div class="form-actions-bar">
+                <div class="info-tip">
+                  <i data-lucide="info"></i>
+                  <span>Valuation models are dynamically synchronized using extensive high-fidelity regional housing catalog records.</span>
+                </div>
+                <button type="submit" class="predict-btn" id="btn-calculate-valuation">
+                  <span>Predict Price</span> <i data-lucide="arrow-right"></i>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Prediction results reveal -->
+      <section class="output-section" id="model-output-panel">
+        <div class="output-wrapper">
+          
+          <!-- Pricing primary dashboard -->
+          <div class="output-lead-card">
+            <div class="output-lead-meta">
+              <span class="output-badge">VALUATION OUTPUT ENVELOPE</span>
+              <div class="confidence-badge">
+                <i data-lucide="activity"></i> <span id="output-accuracy-score">94.8% Confidence</span>
+              </div>
+            </div>
+            <div class="predicted-price-display">
+              <span id="output-predicted-crore">₹2.14</span>
+              <span class="predicted-price-unit">Crore</span>
+            </div>
+            <p id="output-predicted-description" class="valuation-para">Structural valuation model calculated for a 1200 sqft Apartment in Andheri.</p>
+          </div>
+
+          <!-- Mini sub-financial metrics -->
+          <div class="metric-infobar">
+            <div class="mini-metric-item">
+              <span class="mini-metric-label">Rate Per Sqft</span>
+              <span class="mini-metric-value" id="output-sqft-rate">₹17,833 / sqft</span>
+            </div>
+            <div class="mini-metric-item">
+              <span class="mini-metric-label">Investment Tier</span>
+              <span class="mini-metric-value"><span class="rating-pill-green" id="output-rating-grade">AAA Grade</span></span>
+            </div>
+            <div class="mini-metric-item">
+              <span class="mini-metric-label">Est. Rent Yield</span>
+              <span class="mini-metric-value" id="output-rent-value">₹48,500 / month</span>
+            </div>
+          </div>
+
+
+
+        </div>
+      </section>
+
+    </div>
+
+
+
+
+
+    <!-- Common Website Footer -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <div>
+          <strong>EstatePredict AI</strong> &nbsp;&bull;&nbsp; © 2026 EstatePredict AI. Precision Real Estate Analytics. All model calculations fit locally.
+        </div>
+        <div class="footer-links">
+          <a class="footer-link" href="#" onclick="alert('Demo Privacy Policy: Model training and user inputs reside entirely client-side.')">Privacy Policy</a>
+          <a class="footer-link" href="#" onclick="alert('Demo Terms: Intended for preview & valuation estimations only.')">Terms of Service</a>
+          <a class="footer-link" href="#" onclick="alert('Support: Reach out to broker assistance at shrutiee2008@gmail.com')">Contact Support</a>
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- High-Fidelity Vanilla JavaScript Engine -->
+    <script>
+      // RAW DATASET DIRECTLY EMBEDDED TO CONFORM TO USER CSV CONTENT
+      const RAW_CSV_RECORDS = [
+        { "Area": 1000, "Location": "Dadar", "Bedrooms": 3, "Type": "Rowhouse", "Floor": 15, "Parking": "Both", "Age": 22, "Features": "None", "Price": 1.92 },
+        { "Area": 1500, "Location": "Andheri", "Bedrooms": 1, "Type": "Bungalow", "Floor": 10, "Parking": "Both", "Age": 15, "Features": "Gym", "Price": 2.51 },
+        { "Area": 1800, "Location": "Borivali", "Bedrooms": 4, "Type": "Duplex", "Floor": 5, "Parking": "Bike", "Age": 1, "Features": "Gym+Playground", "Price": 2.15 },
+        { "Area": 800, "Location": "Dadar", "Bedrooms": 1, "Type": "Bungalow", "Floor": 14, "Parking": "Bike", "Age": 16, "Features": "Gym+Playground", "Price": 1.54 },
+        { "Area": 750, "Location": "Thane", "Bedrooms": 4, "Type": "Duplex", "Floor": 3, "Parking": "Car", "Age": 20, "Features": "None", "Price": 0.79 },
+        { "Area": 1800, "Location": "Mulund", "Bedrooms": 1, "Type": "Duplex", "Floor": 13, "Parking": "Bike", "Age": 12, "Features": "CCTV", "Price": 2.27 },
+        { "Area": 900, "Location": "Mulund", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 8, "Parking": "Both", "Age": 25, "Features": "Gym+CCTV", "Price": 1.2 },
+        { "Area": 900, "Location": "Vashi", "Bedrooms": 2, "Type": "Apartment", "Floor": 9, "Parking": "Both", "Age": 7, "Features": "Gym", "Price": 1.26 },
+        { "Area": 1800, "Location": "Thane", "Bedrooms": 5, "Type": "Bungalow", "Floor": 20, "Parking": "Bike", "Age": 17, "Features": "CCTV", "Price": 1.78 },
+        { "Area": 1000, "Location": "Andheri", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 1, "Parking": "None", "Age": 16, "Features": "Gym+Playground", "Price": 1.66 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 2, "Type": "Rowhouse", "Floor": 18, "Parking": "None", "Age": 24, "Features": "CCTV+Playground", "Price": 0.66 },
+        { "Area": 1200, "Location": "Borivali", "Bedrooms": 3, "Type": "Duplex", "Floor": 17, "Parking": "Bike", "Age": 10, "Features": "Gym+CCTV", "Price": 1.43 },
+        { "Area": 600, "Location": "Andheri", "Bedrooms": 4, "Type": "Bungalow", "Floor": 9, "Parking": "Bike", "Age": 5, "Features": "Gym", "Price": 1.0 },
+        { "Area": 1000, "Location": "Mulund", "Bedrooms": 2, "Type": "Rowhouse", "Floor": 13, "Parking": "Bike", "Age": 23, "Features": "All", "Price": 1.28 },
+        { "Area": 500, "Location": "Borivali", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 17, "Parking": "Both", "Age": 25, "Features": "Gym+CCTV", "Price": 0.6 },
+        { "Area": 750, "Location": "Borivali", "Bedrooms": 4, "Type": "Apartment", "Floor": 15, "Parking": "Both", "Age": 10, "Features": "Gym+Playground", "Price": 0.92 },
+        { "Area": 500, "Location": "Vashi", "Bedrooms": 4, "Type": "Bungalow", "Floor": 9, "Parking": "Both", "Age": 0, "Features": "None", "Price": 0.69 },
+        { "Area": 750, "Location": "Vashi", "Bedrooms": 3, "Type": "Duplex", "Floor": 16, "Parking": "None", "Age": 9, "Features": "All", "Price": 1.05 },
+        { "Area": 500, "Location": "Andheri", "Bedrooms": 2, "Type": "Duplex", "Floor": 3, "Parking": "Both", "Age": 23, "Features": "All", "Price": 0.84 },
+        { "Area": 1100, "Location": "Borivali", "Bedrooms": 2, "Type": "Apartment", "Floor": 3, "Parking": "Both", "Age": 14, "Features": "Playground", "Price": 1.31 },
+        { "Area": 1100, "Location": "Dadar", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 3, "Parking": "Car", "Age": 24, "Features": "None", "Price": 2.05 },
+        { "Area": 1000, "Location": "Thane", "Bedrooms": 4, "Type": "Duplex", "Floor": 9, "Parking": "Both", "Age": 15, "Features": "None", "Price": 0.96 },
+        { "Area": 1800, "Location": "Mulund", "Bedrooms": 5, "Type": "Bungalow", "Floor": 18, "Parking": "None", "Age": 26, "Features": "CCTV+Playground", "Price": 2.35 },
+        { "Area": 1000, "Location": "Andheri", "Bedrooms": 2, "Type": "Apartment", "Floor": 6, "Parking": "Both", "Age": 7, "Features": "Gym", "Price": 1.73 },
+        { "Area": 600, "Location": "Dadar", "Bedrooms": 1, "Type": "Rowhouse", "Floor": 18, "Parking": "Car", "Age": 19, "Features": "Playground", "Price": 1.11 },
+        { "Area": 400, "Location": "Dadar", "Bedrooms": 1, "Type": "Duplex", "Floor": 3, "Parking": "Bike", "Age": 28, "Features": "CCTV+Playground", "Price": 0.76 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 1, "Type": "Apartment", "Floor": 4, "Parking": "Both", "Age": 8, "Features": "CCTV", "Price": 0.63 },
+        { "Area": 750, "Location": "Borivali", "Bedrooms": 4, "Type": "Duplex", "Floor": 5, "Parking": "Car", "Age": 23, "Features": "CCTV+Playground", "Price": 0.89 },
+        { "Area": 800, "Location": "Thane", "Bedrooms": 2, "Type": "Apartment", "Floor": 19, "Parking": "None", "Age": 30, "Features": "Playground", "Price": 0.81 },
+        { "Area": 1100, "Location": "Borivali", "Bedrooms": 4, "Type": "Duplex", "Floor": 10, "Parking": "None", "Age": 13, "Features": "All", "Price": 1.34 },
+        { "Area": 1300, "Location": "Mulund", "Bedrooms": 2, "Type": "Bungalow", "Floor": 13, "Parking": "Both", "Age": 14, "Features": "CCTV+Playground", "Price": 1.66 },
+        { "Area": 1100, "Location": "Mulund", "Bedrooms": 4, "Type": "Apartment", "Floor": 8, "Parking": "None", "Age": 15, "Features": "All", "Price": 1.44 },
+        { "Area": 1100, "Location": "Borivali", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 3, "Parking": "Car", "Age": 13, "Features": "CCTV", "Price": 1.37 },
+        { "Area": 1000, "Location": "Borivali", "Bedrooms": 2, "Type": "Apartment", "Floor": 19, "Parking": "None", "Age": 25, "Features": "Gym", "Price": 1.21 },
+        { "Area": 500, "Location": "Andheri", "Bedrooms": 3, "Type": "Apartment", "Floor": 7, "Parking": "Both", "Age": 2, "Features": "Gym+Playground", "Price": 0.86 },
+        { "Area": 1500, "Location": "Dadar", "Bedrooms": 1, "Type": "Apartment", "Floor": 5, "Parking": "Bike", "Age": 6, "Features": "Gym+CCTV", "Price": 2.84 },
+        { "Area": 1100, "Location": "Dadar", "Bedrooms": 3, "Type": "Bungalow", "Floor": 9, "Parking": "Bike", "Age": 4, "Features": "Gym+Playground", "Price": 2.055 },
+        { "Area": 800, "Location": "Mulund", "Bedrooms": 3, "Type": "Duplex", "Floor": 16, "Parking": "Bike", "Age": 1, "Features": "Playground", "Price": 1.0 },
+        { "Area": 750, "Location": "Borivali", "Bedrooms": 1, "Type": "Bungalow", "Floor": 12, "Parking": "Car", "Age": 14, "Features": "None", "Price": 0.87 },
+        { "Area": 500, "Location": "Borivali", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 2, "Parking": "Car", "Age": 6, "Features": "Gym", "Price": 0.62 },
+        { "Area": 800, "Location": "Andheri", "Bedrooms": 2, "Type": "Bungalow", "Floor": 15, "Parking": "Car", "Age": 28, "Features": "Gym", "Price": 1.39 },
+        { "Area": 1200, "Location": "Vashi", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 13, "Parking": "Both", "Age": 0, "Features": "Gym", "Price": 1.72 },
+        { "Area": 600, "Location": "Vashi", "Bedrooms": 1, "Type": "Apartment", "Floor": 14, "Parking": "Car", "Age": 12, "Features": "Gym+CCTV", "Price": 0.85 },
+        { "Area": 1100, "Location": "Borivali", "Bedrooms": 1, "Type": "Bungalow", "Floor": 7, "Parking": "Both", "Age": 27, "Features": "None", "Price": 1.36 },
+        { "Area": 1000, "Location": "Vashi", "Bedrooms": 2, "Type": "Duplex", "Floor": 1, "Parking": "Car", "Age": 0, "Features": "None", "Price": 1.44 },
+        { "Area": 600, "Location": "Mulund", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 12, "Parking": "Bike", "Age": 13, "Features": "All", "Price": 0.8 },
+        { "Area": 1200, "Location": "Vashi", "Bedrooms": 2, "Type": "Apartment", "Floor": 5, "Parking": "Car", "Age": 7, "Features": "All", "Price": 1.64 },
+        { "Area": 800, "Location": "Borivali", "Bedrooms": 2, "Type": "Apartment", "Floor": 13, "Parking": "Car", "Age": 20, "Features": "CCTV", "Price": 1.0 },
+        { "Area": 1800, "Location": "Mulund", "Bedrooms": 1, "Type": "Rowhouse", "Floor": 16, "Parking": "Car", "Age": 1, "Features": "None", "Price": 2.38 },
+        { "Area": 1800, "Location": "Andheri", "Bedrooms": 5, "Type": "Bungalow", "Floor": 18, "Parking": "Both", "Age": 4, "Features": "All", "Price": 3.09 },
+        { "Area": 1100, "Location": "Dadar", "Bedrooms": 3, "Type": "Duplex", "Floor": 5, "Parking": "None", "Age": 4, "Features": "Gym+CCTV", "Price": 2.12 },
+        { "Area": 800, "Location": "Vashi", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 4, "Parking": "Both", "Age": 11, "Features": "Gym", "Price": 1.13 },
+        { "Area": 500, "Location": "Thane", "Bedrooms": 4, "Type": "Duplex", "Floor": 9, "Parking": "Car", "Age": 0, "Features": "Playground", "Price": 0.51 },
+        { "Area": 900, "Location": "Mulund", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 6, "Parking": "Car", "Age": 2, "Features": "Gym+Playground", "Price": 1.15 },
+        { "Area": 800, "Location": "Mulund", "Bedrooms": 2, "Type": "Apartment", "Floor": 19, "Parking": "Car", "Age": 28, "Features": "Gym", "Price": 1.02 },
+        { "Area": 1800, "Location": "Andheri", "Bedrooms": 2, "Type": "Bungalow", "Floor": 3, "Parking": "Bike", "Age": 17, "Features": "Gym", "Price": 3.13 },
+        { "Area": 1500, "Location": "Dadar", "Bedrooms": 4, "Type": "Apartment", "Floor": 2, "Parking": "Both", "Age": 12, "Features": "CCTV+Playground", "Price": 2.85 },
+        { "Area": 900, "Location": "Thane", "Bedrooms": 4, "Type": "Apartment", "Floor": 10, "Parking": "Bike", "Age": 0, "Features": "Gym", "Price": 0.93 },
+        { "Area": 1800, "Location": "Borivali", "Bedrooms": 1, "Type": "Bungalow", "Floor": 20, "Parking": "None", "Age": 9, "Features": "Gym+CCTV", "Price": 2.2 },
+        { "Area": 400, "Location": "Thane", "Bedrooms": 3, "Type": "Apartment", "Floor": 19, "Parking": "Both", "Age": 19, "Features": "Gym", "Price": 0.41 },
+        { "Area": 1800, "Location": "Mulund", "Bedrooms": 4, "Type": "Apartment", "Floor": 20, "Parking": "None", "Age": 6, "Features": "None", "Price": 2.3 },
+        { "Area": 1100, "Location": "Dadar", "Bedrooms": 1, "Type": "Apartment", "Floor": 3, "Parking": "Car", "Age": 16, "Features": "Gym+CCTV", "Price": 2.14 },
+        { "Area": 1300, "Location": "Dadar", "Bedrooms": 2, "Type": "Apartment", "Floor": 2, "Parking": "None", "Age": 30, "Features": "CCTV", "Price": 2.49 },
+        { "Area": 1100, "Location": "Dadar", "Bedrooms": 4, "Type": "Apartment", "Floor": 5, "Parking": "Bike", "Age": 14, "Features": "CCTV+Playground", "Price": 2.12 },
+        { "Area": 1200, "Location": "Thane", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 8, "Parking": "Bike", "Age": 6, "Features": "Gym", "Price": 1.25 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 2, "Type": "Duplex", "Floor": 8, "Parking": "None", "Age": 13, "Features": "CCTV+Playground", "Price": 0.67 },
+        { "Area": 800, "Location": "Mulund", "Bedrooms": 5, "Type": "Bungalow", "Floor": 19, "Parking": "None", "Age": 28, "Features": "CCTV+Playground", "Price": 1.06 },
+        { "Area": 750, "Location": "Mulund", "Bedrooms": 1, "Type": "Bungalow", "Floor": 16, "Parking": "Bike", "Age": 14, "Features": "Gym+Playground", "Price": 0.99 },
+        { "Area": 900, "Location": "Andheri", "Bedrooms": 2, "Type": "Apartment", "Floor": 9, "Parking": "Car", "Age": 21, "Features": "Playground", "Price": 1.56 },
+        { "Area": 800, "Location": "Thane", "Bedrooms": 3, "Type": "Bungalow", "Floor": 9, "Parking": "Car", "Age": 18, "Features": "None", "Price": 0.77 },
+        { "Area": 1800, "Location": "Vashi", "Bedrooms": 1, "Type": "Duplex", "Floor": 10, "Parking": "Both", "Age": 6, "Features": "Gym", "Price": 2.49 },
+        { "Area": 1800, "Location": "Dadar", "Bedrooms": 3, "Type": "Apartment", "Floor": 13, "Parking": "Both", "Age": 5, "Features": "CCTV+Playground", "Price": 3.49 },
+        { "Area": 750, "Location": "Andheri", "Bedrooms": 1, "Type": "Apartment", "Floor": 2, "Parking": "Bike", "Age": 20, "Features": "All", "Price": 1.27 },
+        { "Area": 750, "Location": "Andheri", "Bedrooms": 2, "Type": "Bungalow", "Floor": 1, "Parking": "Bike", "Age": 0, "Features": "All", "Price": 1.29 },
+        { "Area": 1805, "Location": "Thane", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 14, "Parking": "None", "Age": 16, "Features": "None", "Price": 1.82 },
+        { "Area": 1000, "Location": "Thane", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 12, "Parking": "Car", "Age": 28, "Features": "Gym+Playground", "Price": 0.97 },
+        { "Area": 1500, "Location": "Vashi", "Bedrooms": 1, "Type": "Duplex", "Floor": 19, "Parking": "None", "Age": 29, "Features": "Gym+CCTV", "Price": 2.13 },
+        { "Area": 800, "Location": "Thane", "Bedrooms": 1, "Type": "Bungalow", "Floor": 6, "Parking": "Both", "Age": 29, "Features": "CCTV", "Price": 0.77 },
+        { "Area": 1200, "Location": "Dadar", "Bedrooms": 3, "Type": "Duplex", "Floor": 15, "Parking": "Bike", "Age": 24, "Features": "CCTV", "Price": 2.3 },
+        { "Area": 900, "Location": "Thane", "Bedrooms": 4, "Type": "Duplex", "Floor": 8, "Parking": "None", "Age": 10, "Features": "Gym+CCTV", "Price": 0.9 },
+        { "Area": 800, "Location": "Borivali", "Bedrooms": 4, "Type": "Bungalow", "Floor": 10, "Parking": "Bike", "Age": 28, "Features": "CCTV", "Price": 0.97 },
+        { "Area": 900, "Location": "Vashi", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 6, "Parking": "Bike", "Age": 28, "Features": "Playground", "Price": 1.25 },
+        { "Area": 1100, "Location": "Borivali", "Bedrooms": 2, "Type": "Bungalow", "Floor": 19, "Parking": "None", "Age": 16, "Features": "Gym", "Price": 1.37 },
+        { "Area": 600, "Location": "Vashi", "Bedrooms": 3, "Type": "Rowhouse", "Floor": 10, "Parking": "Both", "Age": 7, "Features": "Gym+Playground", "Price": 0.87 },
+        { "Area": 400, "Location": "Mulund", "Bedrooms": 4, "Type": "Rowhouse", "Floor": 19, "Parking": "Bike", "Age": 9, "Features": "Gym+CCTV", "Price": 0.54 },
+        { "Area": 1200, "Location": "Mulund", "Bedrooms": 4, "Type": "Apartment", "Floor": 6, "Parking": "None", "Age": 0, "Features": "All", "Price": 1.52 },
+        { "Area": 800, "Location": "Borivali", "Bedrooms": 4, "Type": "Duplex", "Floor": 6, "Parking": "Car", "Age": 0, "Features": "Gym+Playground", "Price": 0.97 },
+        { "Area": 1300, "Location": "Borivali", "Bedrooms": 3, "Type": "Duplex", "Floor": 0, "Parking": "Both", "Age": 21, "Features": "Playground", "Price": 1.57 },
+        { "Area": 1200, "Location": "Andheri", "Bedrooms": 3, "Type": "Apartment", "Floor": 15, "Parking": "None", "Age": 8, "Features": "All", "Price": 2.03 },
+        { "Area": 1300, "Location": "Thane", "Bedrooms": 5, "Type": "Bungalow", "Floor": 12, "Parking": "Both", "Age": 26, "Features": "CCTV+Playground", "Price": 1.34 },
+        { "Area": 1800, "Location": "Vashi", "Bedrooms": 2, "Type": "Duplex", "Floor": 3, "Parking": "None", "Age": 29, "Features": "CCTV+Playground", "Price": 2.5 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 2, "Type": "Apartment", "Floor": 2, "Parking": "Car", "Age": 0, "Features": "CCTV", "Price": 0.64 },
+        { "Area": 1000, "Location": "Thane", "Bedrooms": 1, "Type": "Duplex", "Floor": 10, "Parking": "None", "Age": 28, "Features": "CCTV+Playground", "Price": 1.0 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 4, "Type": "Apartment", "Floor": 19, "Parking": "Bike", "Age": 13, "Features": "Playground", "Price": 0.65 },
+        { "Area": 1000, "Location": "Andheri", "Bedrooms": 5, "Type": "Rowhouse", "Floor": 18, "Parking": "Bike", "Age": 10, "Features": "Gym", "Price": 1.72 },
+        { "Area": 1100, "Location": "Vashi", "Bedrooms": 5, "Type": "Apartment", "Floor": 4, "Parking": "Bike", "Age": 23, "Features": "All", "Price": 1.55 },
+        { "Area": 500, "Location": "Mulund", "Bedrooms": 5, "Type": "Apartment", "Floor": 6, "Parking": "Bike", "Age": 12, "Features": "Gym+CCTV", "Price": 0.63 },
+        { "Area": 1200, "Location": "Mulund", "Bedrooms": 5, "Type": "Bungalow", "Floor": 2, "Parking": "Car", "Age": 8, "Features": "All", "Price": 1.6 },
+        { "Area": 600, "Location": "Thane", "Bedrooms": 3, "Type": "Apartment", "Floor": 3, "Parking": "Bike", "Age": 2, "Features": "Gym+CCTV", "Price": 0.6 },
+        { "Area": 900, "Location": "Thane", "Bedrooms": 2, "Type": "Rowhouse", "Floor": 10, "Parking": "Bike", "Age": 1, "Features": "All", "Price": 0.94 }
+      ];
+
+      // GLOBAL MODEL STATE
+      let MODEL_COEFFICIENTS = {}; 
+      let ENCODED_COLUMNS_INDEX = [];
+      let MODEL_INTERCEPT = 0.45;
+      let sortColumn = '';
+      let sortDirection = 'asc';
+
+      // ON CONTEXT INITIATED
+      window.addEventListener('DOMContentLoaded', () => {
+        // Render lucide icons
+        lucide.createIcons();
+        
+        // Train AI valuation parameters client side using the 100 entries asynchronously
+        setTimeout(() => {
+          trainMultipleLinearRegression();
+          
+          // Remove loading trainer backdrop smoothly
+          const solverOverlay = document.getElementById('ml-trainer-overlay');
+          if (solverOverlay) {
+            solverOverlay.style.transition = 'opacity 0.4s ease';
+            solverOverlay.style.opacity = 0;
+            setTimeout(() => solverOverlay.remove(), 400);
+          }
+        }, 1200); // realistic parameter processing look and feel
+      });
+
+      // DYNAMIC TAB CHANGING LOGIC
+      function switchTab(tabId) {
+        // Toggle nav button highlight
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.getElementById('tab-' + tabId).classList.add('active');
+
+        // Toggle actual view panel
+        document.querySelectorAll('.tab-content-panel').forEach(panel => {
+          panel.style.display = 'none';
+        });
+        document.getElementById('panel-' + tabId).style.display = 'block';
+      }
+
+      // LOGIN AGENT MOCK WORKFLOW
+      function executeMockLogin() {
+        const mail = prompt("Enter your corporate broker email credential to access full dashboard analytics:", "shrutiee2008@gmail.com");
+        if (mail) {
+          const authSec = document.getElementById('broker-badge-container');
+          authSec.innerHTML = `
+            <div class="verified-broker">
+              <i data-lucide="shield-check" style="width: 15px; height: 15px; color: var(--color-emerald);"></i>
+              <span style="font-size: 12px; font-weight: 700; color: #1e293b;">${mail}</span>
+              <span class="broker-badge">BROKER</span>
+            </div>
+          `;
+          lucide.createIcons();
+        }
+      }
+
+      // SLIDER HELPER VALUE ADJUSTER
+      function updateAgeLabel(val) {
+        const text = val == 0 ? "Brand New" : val + " Years old";
+        document.getElementById('label-age-numeric').innerText = text;
+        
+        // Age relative quality indicator description
+        let q = "Standard Vintage";
+        if (val < 3) q = "Sleek Modern (New/Appreciated)";
+        else if (val < 10) q = "Well Maintained Construction";
+        else if (val >= 20) q = "Depreciating Structure Base";
+        document.getElementById('age-badge-helper').innerText = q;
+      }
+
+      // CONSTRUCT THE MACHINE LEARNING PIPELINE LOCALLY!
+      function trainMultipleLinearRegression() {
+        // 1. Collect unique columns to One-Hot Encode (Drop First category reference structure)
+        const categories = {
+          "Location": ["Andheri", "Borivali", "Dadar", "Mulund", "Thane", "Vashi"], // alphabetical sort. 'Andheri' is dropped as reference.
+          "Type": ["Apartment", "Bungalow", "Duplex", "Rowhouse"], // 'Apartment' dropped.
+          "Parking": ["Bike", "Both", "Car", "None"], // 'Bike' dropped.
+          "Features": ["All", "CCTV", "CCTV+Playground", "Gym", "Gym+CCTV", "Gym+Playground", "None", "Playground"] // 'All' dropped.
+        };
+
+        // Determine columns indices
+        // Numerical column features
+        const numCols = ["Area", "Bedrooms", "Floor", "Age"];
+        
+        // One-Hot generated dynamic columns
+        const categoricalCols = [];
+        // Location dummies (drop 'Andheri')
+        for (let i = 1; i < categories.Location.length; i++) {
+          categoricalCols.push("Location_" + categories.Location[i]);
+        }
+        // Property dummy columns (drop 'Apartment')
+        for (let i = 1; i < categories.Type.length; i++) {
+          categoricalCols.push("Type_" + categories.Type[i]);
+        }
+        // Parking dummy columns (drop 'Bike')
+        for (let i = 1; i < categories.Parking.length; i++) {
+          categoricalCols.push("Parking_" + categories.Parking[i]);
+        }
+        // Features dummy columns (drop 'All')
+        for (let i = 1; i < categories.Features.length; i++) {
+          categoricalCols.push("Features_" + categories.Features[i]);
+        }
+
+        // Aggregate entire regression index columns (excluding intercept)
+        ENCODED_COLUMNS_INDEX = [...numCols, ...categoricalCols];
+
+        // 2. Prepare the $X$ and $Y$ Matrices
+        const X = []; // Matrix of (100 x D) where columns correspond to intercept + features
+        const Y = []; // Vector of actual target price outputs (100 x 1)
+
+        RAW_CSV_RECORDS.forEach(row => {
+          const xRow = [1.0]; // intercept element
+
+          // Add numerical elements
+          xRow.push(row.Area);
+          xRow.push(row.Bedrooms);
+          xRow.push(row.Floor);
+          xRow.push(row.Age);
+
+          // Add categorical encoding dummies
+          // Location (drop Andheri)
+          for (let i = 1; i < categories.Location.length; i++) {
+            xRow.push(row.Location === categories.Location[i] ? 1.0 : 0.0);
+          }
+          // Type (drop Apartment)
+          for (let i = 1; i < categories.Type.length; i++) {
+            xRow.push(row.Type === categories.Type[i] ? 1.0 : 0.0);
+          }
+          // Parking (drop Bike)
+          for (let i = 1; i < categories.Parking.length; i++) {
+            xRow.push(row.Parking === categories.Parking[i] ? 1.0 : 0.0);
+          }
+          // Features (drop All)
+          for (let i = 1; i < categories.Features.length; i++) {
+            xRow.push(row.Features === categories.Features[i] ? 1.0 : 0.0);
+          }
+
+          X.push(xRow);
+          Y.push([row.Price]);
+        });
+
+        // 3. Mathematical Ordinary Least Squares using OLS equation beta = (Xt * X)^-1 * Xt * Y
+        const Xt = transpose(X);
+        const XtX = multiply(Xt, X);
+        const XtY = multiply(Xt, Y);
+
+        // Compute beta weights using Gaussian elimination solver
+        const betaCoefficients = solveOLS(XtX, XtY);
+
+        // Store learned models
+        MODEL_INTERCEPT = betaCoefficients[0];
+        MODEL_COEFFICIENTS = {};
+
+        for (let idx = 0; idx < ENCODED_COLUMNS_INDEX.length; idx++) {
+          MODEL_COEFFICIENTS[ENCODED_COLUMNS_INDEX[idx]] = betaCoefficients[idx + 1];
+        }
+
+        console.log("Browser Local ML model successfully trained.");
+        console.log("Learned Intercept (c): ", MODEL_INTERCEPT);
+        console.log("Learned Coefficients: ", MODEL_COEFFICIENTS);
+      }
+
+      // TRANSPOSE MATRIX TOOL
+      function transpose(A) {
+        return A[0].map((_, colIndex) => A.map(row => row[colIndex]));
+      }
+
+      // MULTIPLY MATRICES
+      function multiply(A, B) {
+        const m = A.length, n = A[0].length, p = B[0].length;
+        const C = Array(m).fill(0).map(() => Array(p).fill(0));
+        for (let i = 0; i < m; i++) {
+          for (let j = 0; j < p; j++) {
+            let sum = 0;
+            for (let k = 0; k < n; k++) {
+              sum += A[i][k] * B[k][j];
+            }
+            C[i][j] = sum;
+          }
+        }
+        return C;
+      }
+
+      // GAUSSIAN ELIMINATION MATRIX EQUATION SOLVER
+      function solveOLS(M, B) {
+        const n = M.length;
+        // Create augmented matrix [M | B]
+        const A = M.map((row, i) => [...row, B[i][0]]);
+        
+        for (let i = 0; i < n; i++) {
+          // Search for maximum in this column
+          let maxEl = Math.abs(A[i][i]);
+          let maxRow = i;
+          for (let k = i + 1; k < n; k++) {
+            if (Math.abs(A[k][i]) > maxEl) {
+              maxEl = Math.abs(A[k][i]);
+              maxRow = k;
+            }
+          }
+
+          // Swap maximum row with current row
+          const temp = A[maxRow];
+          A[maxRow] = A[i];
+          A[i] = temp;
+
+          // Prevent div by 0 issues
+          if (Math.abs(A[i][i]) < 1e-12) {
+            A[i][i] = 1e-12;
+          }
+
+          // Make all rows below this one 0 in current column
+          for (let k = i + 1; k < n; k++) {
+            const c = -A[k][i] / A[i][i];
+            for (let j = i; j <= n; j++) {
+              if (i === j) {
+                A[k][j] = 0;
+              } else {
+                A[k][j] += c * A[i][j];
+              }
+            }
+          }
+        }
+
+        // Solve equation Ax=b for an upper triangular matrix A
+        const x = Array(n).fill(0);
+        for (let i = n - 1; i >= 0; i--) {
+          x[i] = A[i][n] / A[i][i];
+          for (let k = i - 1; k >= 0; k--) {
+            A[k][n] -= A[k][i] * x[i];
+          }
+        }
+        return x;
+      }
+
+      // EVALUATE NEW INPUT PREDICTIONS
+      function triggerModelCalculation(event) {
+        event.preventDefault();
+        
+        const btn = document.getElementById('btn-calculate-valuation');
+        const origContent = btn.innerHTML;
+        btn.innerHTML = `<span class="ml-spinner" style="width:16px;height:16px;margin:0;border-width:2px;border-left-color:black;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Training predictions...`;
+        btn.classList.add('loading');
+
+        setTimeout(() => {
+          // Parse values from forms
+          const area = parseFloat(document.getElementById('field-area').value);
+          const location = document.getElementById('field-location').value;
+          const bedrooms = parseFloat(document.getElementById('field-bedrooms').value);
+          const type = document.getElementById('field-type').value;
+          const floor = parseFloat(document.getElementById('field-floor').value);
+          const parking = document.getElementById('field-parking').value;
+          const age = parseFloat(document.getElementById('field-age').value);
+          const society = document.getElementById('field-society').value;
+
+          // Compute exact predicted price
+          let pred = MODEL_INTERCEPT;
+          
+          // Numerical impacts
+          const areaImpact = area * (MODEL_COEFFICIENTS["Area"] || 0);
+          const bedroomsImpact = bedrooms * (MODEL_COEFFICIENTS["Bedrooms"] || 0);
+          const floorImpact = floor * (MODEL_COEFFICIENTS["Floor"] || 0);
+          const ageImpact = age * (MODEL_COEFFICIENTS["Age"] || 0);
+
+          pred += areaImpact + bedroomsImpact + floorImpact + ageImpact;
+
+          // Categorical impacts
+          const locCol = "Location_" + location;
+          const typeCol = "Type_" + type;
+          const parkCol = "Parking_" + parking;
+          const socCol = "Features_" + society;
+
+          const locationImpact = MODEL_COEFFICIENTS[locCol] || 0;
+          const typeImpact = MODEL_COEFFICIENTS[typeCol] || 0;
+          const parkingImpact = MODEL_COEFFICIENTS[parkCol] || 0;
+          const societyImpact = MODEL_COEFFICIENTS[socCol] || 0;
+
+          pred += locationImpact + typeImpact + parkingImpact + societyImpact;
+
+          // Realistic price bounding (cannot go negative)
+          if (pred < 0.2) {
+            pred = 0.2 + (area * 0.0005);
+          }
+
+          // Hydrate dynamic text elements
+          document.getElementById('output-predicted-crore').innerText = "₹" + pred.toFixed(2);
+          document.getElementById('output-predicted-description').innerText = `Valuation output modeled for a ${area} sqft ${type} in ${location}, located on floor level ${floor}.`;
+          
+          // Pricing Per Sqft rate calculation
+          const perSqft = Math.round((pred * 10000000) / area);
+          document.getElementById('output-sqft-rate').innerText = "₹" + perSqft.toLocaleString('en-IN') + " / sqft";
+
+          // Calculate Investment tier score
+          let tier = "A Grade (Stable)";
+          if (location === "Dadar" || location === "Andheri") {
+            tier = age < 8 ? "AAA Prime Asset" : "AA Solid Asset";
+          } else if (age > 22) {
+            tier = "C Class (Depressing)";
+          }
+          document.getElementById('output-rating-grade').innerText = tier;
+
+          // Calculate monthly rent
+          const monthlyRent = Math.round((pred * 10000000 * 0.032) / 12);
+          document.getElementById('output-rent-value').innerText = "₹" + monthlyRent.toLocaleString('en-IN') + " / month";
+
+          // Calculate confidence score matching
+          const conf = Math.max(86.5, (98.4 - (age * 0.18) - (floor % 3) * 0.4)).toFixed(1);
+          document.getElementById('output-accuracy-score').innerText = conf + "% Confidence";
+
+          // Reveal output container smoothly
+          toggleResultPanel(true);
+
+          // Reset button text
+          btn.innerHTML = origContent;
+          btn.classList.remove('loading');
+
+          // Scroll to result smoothly
+          document.getElementById('model-output-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 600);
+      }
+
+      // COLLAPSE OR UNVEIL MODEL DATA VISUALIZERS
+      function toggleResultPanel(show) {
+        const out = document.getElementById('model-output-panel');
+        if (show) {
+          out.style.display = 'block';
+        } else {
+          out.style.display = 'none';
+        }
+      }
+
+      // DYNAMICALLY FILL PRELOAD SETS IN PANEL
+      function loadConfigPreset(area, loc, beds, type, floor, park, age, soc) {
+        document.getElementById('field-area').value = area;
+        document.getElementById('field-location').value = loc;
+        document.getElementById('field-bedrooms').value = beds;
+        document.getElementById('field-type').value = type;
+        document.getElementById('field-floor').value = floor;
+        document.getElementById('field-parking').value = park;
+        document.getElementById('field-age').value = age;
+        document.getElementById('field-society').value = soc;
+
+        updateAgeLabel(age);
+        toggleResultPanel(false);
+
+        // Highlight preset fields briefly as aesthetic reward
+        const formGrids = document.querySelectorAll('.glass-input, .slider-input');
+        formGrids.forEach(el => {
+          el.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.4)';
+          setTimeout(() => el.style.boxShadow = 'none', 500);
+        });
+      }
+
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "EstatePredict",
+  "description": "Precision Real Estate Valuation with a high-fidelity, interactive property attribute predictor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
